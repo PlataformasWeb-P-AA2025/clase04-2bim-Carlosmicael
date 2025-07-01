@@ -1,3 +1,4 @@
+from ast import Not
 from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 from django import forms
@@ -52,6 +53,20 @@ class NumeroTelefonicoForm(ModelForm):
     class Meta:
         model = NumeroTelefonico
         fields = ['telefono', 'tipo', 'estudiante']
+
+    def clean_telefono(self):
+        valor = self.cleaned_data['telefono']
+        if len(valor) != 10:
+            raise forms.ValidationError("Ingrese telefono con 10 dígitos")
+        return valor    
+
+    def clean_tipo(self):
+        valor = self.cleaned_data['tipo']
+        print(valor)
+        if valor.lower()[:1] in ['a', 'e', 'i', 'o', 'u']:
+            print(valor.lower()[:1])
+            raise forms.ValidationError("Ingrese tipo válido esta empezando con vocal")
+        return valor    
 
 
 class NumeroTelefonicoEstudianteForm(ModelForm):
